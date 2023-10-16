@@ -48,15 +48,15 @@ public class MovimientoJugador : MonoBehaviour
                 audioSource.Pause();
         }
     }
-    void OnCollisionrEnter (Collider col)
+    void OnCollisionEnter (Collision col)
     {
     
     
-      if (col.gameObject.CompareTag("Friend"))
+      if (col.gameObject.tag == "Friend")
       {
         Instantiate(particulas, col.transform.position, col.transform.rotation);
         Score++;
-        ScoreText.text = "Score = " + Score;
+        ScoreText.text = " " + Score;
         Destroy(col.gameObject);
         
       }
