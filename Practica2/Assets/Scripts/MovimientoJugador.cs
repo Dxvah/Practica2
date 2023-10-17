@@ -54,7 +54,7 @@ public class MovimientoJugador : MonoBehaviour
     
       if (col.gameObject.tag == "Friend")
       {
-        Instantiate(particulas, col.transform.position, col.transform.rotation);
+        GameObject particulasNuevas = Instantiate(particulas, col.transform.position, col.transform.rotation);
         Score++;
         ScoreText.text = " " + Score;
         Destroy(col.gameObject);
