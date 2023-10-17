@@ -16,6 +16,9 @@ public class MovimientoJugador : MonoBehaviour
     private object TotalFriend;
     public int Score;
     public TextMeshProUGUI ScoreText;
+    public float jumpForce = 100f;
+    public AudioSource colisionSonido;
+    private bool puedeSaltar = true;
     
 
 
@@ -24,29 +27,34 @@ public class MovimientoJugador : MonoBehaviour
         Player = GetComponent<Rigidbody>();
         Score = 0;
         audioSource = GetComponent<AudioSource>();
+        colisionSonido = GetComponent<AudioSource>(); 
     }
-
-
-
     void FixedUpdate()
     {
        
             direction.x = Input.GetAxis("Horizontal") * Time.deltaTime * m_Speed;
             direction.z = Input.GetAxis("Vertical")  * Time.deltaTime * m_Speed;
             Player.AddForce(direction, ForceMode.Impulse);
+            
+            if (puedeSaltar && Input.GetKeyDown(KeyCode.Space))
+            {
+                Saltar();
+            }
     }
-
-
-
     void Update()
     {
         
 
-        if (Score == 8)
+        if (Score == 5)
         {
                 
                 audioSource.Pause();
-        }
+        }  
+    }
+    void Saltar()
+    {
+        Player.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        puedeSaltar = false;
     }
     void OnCollisionEnter (Collision col)
     {
@@ -55,10 +63,14 @@ public class MovimientoJugador : MonoBehaviour
       if (col.gameObject.tag == "Friend")
       {
         GameObject particulasNuevas = Instantiate(particulas, col.transform.position, col.transform.rotation);
+        colisionSonido.Play();
         Score++;
         ScoreText.text = " " + Score;
-        Destroy(col.gameObject);
-        
+        Destroy(col.gameObject); 
+      }
+      else  if (col.gameObject.CompareTag("Suelo"))
+      {
+         puedeSaltar = true;
       }
     }
 }
