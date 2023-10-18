@@ -17,7 +17,6 @@ public class MovimientoJugador : MonoBehaviour
     public int Score;
     public TextMeshProUGUI ScoreText;
     public float jumpForce = 100f;
-    public AudioSource colisionSonido;
     private bool puedeSaltar = true;
     
 
@@ -27,7 +26,7 @@ public class MovimientoJugador : MonoBehaviour
         Player = GetComponent<Rigidbody>();
         Score = 0;
         audioSource = GetComponent<AudioSource>();
-        colisionSonido = GetComponent<AudioSource>(); 
+        
     }
     void FixedUpdate()
     {
@@ -63,7 +62,7 @@ public class MovimientoJugador : MonoBehaviour
       if (col.gameObject.tag == "Friend")
       {
         GameObject particulasNuevas = Instantiate(particulas, col.transform.position, col.transform.rotation);
-        colisionSonido.Play();
+        
         Score++;
         ScoreText.text = " " + Score;
         Destroy(col.gameObject); 
