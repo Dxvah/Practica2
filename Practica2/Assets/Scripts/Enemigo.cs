@@ -21,13 +21,20 @@ public class Enemigo : MonoBehaviour
        if(isWarning == true)
        {
             
-            transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(player.position.x, transform.position.y, player.position.z), speed * Time.deltaTime);
+            transform.LookAt(new Vector3(player.position.x,transform.position.y, player.position.z));
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(player.position.x, player.position.y, player.position.z), speed * Time.deltaTime);
        }
     }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, rangoVision);
+    }
+    void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Friend")
+        {
+            
+        }
     }
 }
