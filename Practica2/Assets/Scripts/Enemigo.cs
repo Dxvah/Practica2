@@ -30,11 +30,5 @@ public class Enemigo : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, rangoVision);
     }
-    void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.tag == "Friend")
-        {
-            
-        }
-    }
+   
 }
