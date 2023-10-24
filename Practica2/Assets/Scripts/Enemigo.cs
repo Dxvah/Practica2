@@ -11,7 +11,7 @@ public class Enemigo : MonoBehaviour
     public float speed;
     void Start()
     {
-        
+        isWarning = false;
     }
 
     

@@ -18,23 +18,27 @@ public class MovimientoJugador : MonoBehaviour
    public TextMeshProUGUI ScoreText;
    public float jumpForce = 100f;
    private bool puedeSaltar = true;
-   public CinemachineVirtualCamera virtualCamera;
-   public float thirdPersonFOV = 60f;
-   public float firstPersonFOV = 0f;
-   private bool isFirstPerson = false;
+   public GameObject virtualCamera;
+   public GameObject FPCamera;
+    private bool isFirstPerson = false;
    public GameObject pauseMenu;
    public TextMeshProUGUI mensajeText; 
    private float mensajeDuracion = 10f; 
    private float tiempoMensaje = 0f; 
    private bool mensajeMostrado = false;
    private bool isPaused = false;
+   public GameObject canvas;
+   public GameObject victoryCanva;
+    
+
+
 
     void Start()
     {
         Player = GetComponent<Rigidbody>();
         Score = 0;
         audioSource = GetComponent<AudioSource>();
-        SetThirdPersonView();
+        canvas.SetActive(true);
     }
 
     void Update()
@@ -54,16 +58,30 @@ public class MovimientoJugador : MonoBehaviour
                 mensajeMostrado = true;
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.C))
+        if(Input.GetKeyDown("c"))
         {
-            ToggleCameraView();
+            isFirstPerson = true;
+        }
+        if (Input.GetKeyDown("x"))
+        {
+            isFirstPerson = false;
         }
 
-        if (Score == 5)
+            if (Score == 5)
         {
-            PauseGame();
+            Victory();
             audioSource.Pause();
+        }
+        if( isFirstPerson == true)
+        {
+            virtualCamera.SetActive(false);
+            FPCamera.SetActive(true);
+            
+        }
+        else
+        {
+            virtualCamera.SetActive(true);
+            FPCamera.SetActive(false);
         }
     }
 
@@ -108,29 +126,9 @@ public class MovimientoJugador : MonoBehaviour
         {
             PauseGame();
         }
-    }
-
-    private void SetThirdPersonView()
-    {
-        virtualCamera.m_Lens.FieldOfView = thirdPersonFOV;
-        isFirstPerson = false;
-    }
-
-    private void SetFirstPersonView()
-    {
-        virtualCamera.m_Lens.FieldOfView = firstPersonFOV;
-        isFirstPerson = true;
-    }
-
-    private void ToggleCameraView()
-    {
-        if (isFirstPerson)
+        else if (col.gameObject.CompareTag("Tuerca"))
         {
-            SetThirdPersonView();
-        }
-        else
-        {
-            SetFirstPersonView();
+            
         }
     }
 
@@ -139,12 +137,19 @@ public class MovimientoJugador : MonoBehaviour
         isPaused = true;
         Time.timeScale = 0f;
         pauseMenu.SetActive(true);
+        canvas.SetActive(false);
     }
 
     void ResumeGame()
     {
         isPaused = false;
         Time.timeScale = 1f;
+    }
+    void Victory()
+    {
+        victoryCanva.SetActive(true);
+        canvas.SetActive(false);
+        Time.timeScale = 0f;
     }
 }
         
