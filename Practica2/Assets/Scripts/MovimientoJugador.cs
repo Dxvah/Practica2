@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Cinemachine;
+using UnityEngine.UI;
 
 public class MovimientoJugador : MonoBehaviour
 {
@@ -29,20 +30,24 @@ public class MovimientoJugador : MonoBehaviour
    private bool isPaused = false;
    public GameObject canvas;
    public GameObject victoryCanva;
-    
+   private float originalSpeed;
+   public float boostSpeedMultiplier = 2f;
+   public TextMeshProUGUI timerText;
+   bool isGameRunning = true;
+   private float gameTime = 0f; 
+   public TextMeshProUGUI tiempoVictoriaText;
 
-
-
-    void Start()
-    {
+   void Start()
+   {
         Player = GetComponent<Rigidbody>();
         Score = 0;
         audioSource = GetComponent<AudioSource>();
         canvas.SetActive(true);
-    }
+        originalSpeed = m_Speed;
+   }
 
-    void Update()
-    {
+   void Update()
+   {
         if (!mensajeMostrado)
         {
             tiempoMensaje += Time.deltaTime;
@@ -83,10 +88,16 @@ public class MovimientoJugador : MonoBehaviour
             virtualCamera.SetActive(true);
             FPCamera.SetActive(false);
         }
-    }
+        if (isGameRunning == true)
+        {
+            gameTime += Time.deltaTime;
+        }
+        string tiempoFormateado = gameTime.ToString("00.00");
+        timerText.text = "Tiempo: " + tiempoFormateado;
+   }
 
-    void FixedUpdate()
-    {
+   void FixedUpdate()
+   {
         direction.x = Input.GetAxis("Horizontal") * Time.deltaTime * m_Speed;
         direction.z = Input.GetAxis("Vertical") * Time.deltaTime * m_Speed;
         Player.AddForce(direction, ForceMode.Impulse);
@@ -95,16 +106,16 @@ public class MovimientoJugador : MonoBehaviour
         {
             Saltar();
         }
-    }
+   }
 
-    void Saltar()
-    {
+   void Saltar()
+   {
         Player.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         puedeSaltar = false;
-    }
+   }
 
-    void OnCollisionEnter(Collision col)
-    {
+   void OnCollisionEnter(Collision col)
+   {
         if (col.gameObject.CompareTag("Friend"))
         {
             GameObject particulasNuevas = Instantiate(particulas, col.transform.position, col.transform.rotation);
@@ -128,29 +139,37 @@ public class MovimientoJugador : MonoBehaviour
         }
         else if (col.gameObject.CompareTag("Tuerca"))
         {
-            
+             m_Speed *= boostSpeedMultiplier;
+             StartCoroutine(ResetSpeedAfterDelay(3f));
+             Destroy(col.gameObject);
         }
-    }
+   }
 
-    void PauseGame()
-    {
+   void PauseGame()
+   {
         isPaused = true;
         Time.timeScale = 0f;
         pauseMenu.SetActive(true);
         canvas.SetActive(false);
-    }
+   }
 
-    void ResumeGame()
-    {
+   void ResumeGame()
+   {
         isPaused = false;
         Time.timeScale = 1f;
-    }
-    void Victory()
-    {
+   }
+   void Victory()
+   {
         victoryCanva.SetActive(true);
         canvas.SetActive(false);
         Time.timeScale = 0f;
-    }
+        tiempoVictoriaText.text = " " + timerText.text;
+   }
+   IEnumerator ResetSpeedAfterDelay(float delay)
+   {
+        yield return new WaitForSeconds(delay);
+        m_Speed = originalSpeed; 
+   }
 }
         
  

@@ -9,6 +9,7 @@ public class Enemigo : MonoBehaviour
     public bool isWarning;
     public Transform player;
     public float speed;
+    public int health = 100;
     void Start()
     {
         isWarning = false;
@@ -30,5 +31,16 @@ public class Enemigo : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, rangoVision);
     }
-   
+   void OnCollisionEnter(Collision col)
+   {
+        if (col.gameObject.CompareTag("Bullet"))
+        {
+            health -= 20; 
+            if (health <= 0)
+            {
+                
+                Destroy(gameObject);
+            }
+        }
+   }
 }
